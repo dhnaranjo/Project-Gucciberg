@@ -9,31 +9,51 @@ defmodule PhoenixPg.PageController do
     render conn, "index.html"
   end
 
-  def create(conn, %{"create" => %{"artist" => artist}}) do
-    Logger.info artist
-    client_key = System.get_env("GENIUS_CLIENT_KEY")
+  def create(conn, %{"create" => %{"artist" => searched_artist}}) do
 
-    response = HTTPoison.get!("https://api.genius.com/search?q=#{URI.encode artist}",
-                              ["Authorization": "Bearer #{client_key}"],
-                              [])
+    primary_artist = searched_artist
+                     |> artist_search
+                     |> Kernel.get_in(["response", "hits"])
+                     |> List.first
+                     |> get_song_primary_artist
 
-    songs = response
-            |> Map.get(:body)
-            |> Poison.decode!
-            |> Kernel.get_in(["response", "hits"])
-            |> Enum.map(& [ title: &1["result"]["title"], url: &1["result"]["url"]])
+    artist_songs = primary_artist["id"]
+                   |> songs_search
+                   |> Kernel.get_in(["response", "songs"])
+                   # |> Enum.map(& [ title: &1["title"], url: &1["url"]])
 
-    {_, song} = Enum.fetch(songs,0)
 
-    song_page = HTTPoison.get!(song[:url])
+    {_, song} = Enum.fetch(artist_songs,0)
+                |> Apex.ap
+
+    song_page = HTTPoison.get!(song["url"])
                 |> Map.get(:body)
                 |> Floki.find(".lyrics p")
                 |> Floki.text
                 |> String.replace(~r/\n\n/, "\n")
-                # |> Floki.raw_html
-                # |> String.replace(~r/<a.*?<\/a>/, "")
+                |> String.split("\n")
 
-    IO.puts song_page
+    IO.puts song["primary_artist"]["name"]
+    IO.puts song["title_with_featured"]
+    Apex.ap song_page
     render conn, "index.html"
+  end
+
+  def get_song_primary_artist(song), do: song |> Kernel.get_in(["result", "primary_artist"])
+
+  def parse_response(response) do
+    response |> Map.get(:body) |> Poison.decode! 
+  end
+
+  def artist_search(artist) do
+    client_key = System.get_env("GENIUS_CLIENT_KEY")
+    HTTPoison.get!("https://api.genius.com/search?q=#{URI.encode artist}", ["Authorization": "Bearer #{client_key}"],[])
+    |> parse_response
+  end
+
+  def songs_search(artist_id) do
+    client_key = System.get_env("GENIUS_CLIENT_KEY")
+    HTTPoison.get!("https://api.genius.com/artists/#{Integer.to_string artist_id}/songs?sort=popularity", ["Authorization": "Bearer #{client_key}"],[])
+    |> parse_response
   end
 end
