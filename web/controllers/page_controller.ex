@@ -24,18 +24,20 @@ defmodule PhoenixPg.PageController do
 
 
     {_, song} = Enum.fetch(artist_songs,0)
-                |> Apex.ap
+                # |> Apex.ap
 
-    song_page = HTTPoison.get!(song["url"])
+    lyrics = HTTPoison.get!(song["url"])
                 |> Map.get(:body)
                 |> Floki.find(".lyrics p")
                 |> Floki.text
                 |> String.replace(~r/\n\n/, "\n")
                 |> String.split("\n")
+                |> Enum.chunk_by(&(&1 == ""))
+                |> Enum.reject(&(&1 == [""]))
 
     IO.puts song["primary_artist"]["name"]
     IO.puts song["title_with_featured"]
-    Apex.ap song_page
+    Apex.ap lyrics
     render conn, "index.html"
   end
 
