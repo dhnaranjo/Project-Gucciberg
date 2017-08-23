@@ -43,6 +43,7 @@ defmodule PhoenixPg.Mixfile do
       {:cowboy, "~> 1.0"},
       {:httpoison, "~> 0.13"},
       {:apex, "~> 1.0.0"},
+      {:floki, "~> 0.18.0"},
     ]
   end
 

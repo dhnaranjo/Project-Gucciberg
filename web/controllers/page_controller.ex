@@ -9,21 +9,31 @@ defmodule PhoenixPg.PageController do
     render conn, "index.html"
   end
 
-  def create(conn, params) do
-    artist = params["create"]["artist"]
+  def create(conn, %{"create" => %{"artist" => artist}}) do
     Logger.info artist
     client_key = System.get_env("GENIUS_CLIENT_KEY")
+
     response = HTTPoison.get!("https://api.genius.com/search?q=#{URI.encode artist}",
-                             ["Authorization": "Bearer #{client_key}"],
-                             [])
+                              ["Authorization": "Bearer #{client_key}"],
+                              [])
 
-    # IO.puts inspect Poison.decode!(response.body)["response"]["hits"]
+    songs = response
+            |> Map.get(:body)
+            |> Poison.decode!
+            |> Kernel.get_in(["response", "hits"])
+            |> Enum.map(& [ title: &1["result"]["title"], url: &1["result"]["url"]])
 
-    response.body
-    |> Poison.decode!
-    |> Kernel.get_in(["response", "hits"])
-    |> Enum.map(& { &1["result"]["title"], &1["result"]["url"]})
-    |> Apex.ap
+    {_, song} = Enum.fetch(songs,0)
+
+    song_page = HTTPoison.get!(song[:url])
+                |> Map.get(:body)
+                |> Floki.find(".lyrics p")
+                |> Floki.text
+                |> String.replace(~r/\n\n/, "\n")
+                # |> Floki.raw_html
+                # |> String.replace(~r/<a.*?<\/a>/, "")
+
+    IO.puts song_page
     render conn, "index.html"
   end
 end
