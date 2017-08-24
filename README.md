@@ -1,20 +1,15 @@
-# PhoenixPg
+# Project Gucciberg
 
-To start your Phoenix app:
+## What?
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `npm install`
-  * Start Phoenix endpoint with `mix phoenix.server`
+Alright, you know [Project Gutenberg](https://www.gutenberg.org)? Well, it's a program that digitizes and cleans up books whose copywrites have expired and are frequently out of print. It ensures that texts that aren't necessarily economically viable will continue to exist. This is kind of the opposite?
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## Wait, what?
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+Upon completion, a user of Project Gucciberg will enter the name of their favorite artist. Hopefully it's [Gucci Mane](https://www.youtube.com/watch?v=H6Q4s_ZdvAQ), but I mean whatever. Project Gucciberg will pull down their most popular tracks at the moment, maybe 20 of them, maybe a variable count, I haven't decided. We'll collect the lyrics of these songs and compose them into a book, styled and formatted as a collection of verse poetry. Because why not?
 
-## Learn more
+I'd like to deliver the book in a variety of ways, as an eBook, as a PDF for screen reading, as a PDF ordered and marked for trimming and book binding, and as a PDF formatted for use with digital print services such as [Blurb](http://www.blurb.com). For the first round I'll be satisfied with a downloadable screen reading PDF.
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+## But why?
+
+I dunno, I think it's fun. I want to learn Elixir, I find the digital vs physical book debate interesting and I really like hip hop. Also I'm unemployed.
