@@ -38,10 +38,14 @@ defmodule PhoenixPg.PageController do
 
     # Iona.source(path: "web/static/assets/lemonade.tex")
     # |> Iona.write!("web/static/assets/lemonade.pdf")
+    #
+    %{title: song["primary_artist"]["name"], lyrics: lyrics}
+    |> Iona.template(path: "web/static/assets/song.tex.eex")
+    |> Iona.write!("web/static/assets/song.pdf")
 
-    IO.puts song["primary_artist"]["name"]
-    IO.puts song["title_with_featured"]
-    Apex.ap lyrics
+    # IO.puts song["primary_artist"]["name"]
+    # IO.puts song["title_with_featured"]
+    # Apex.ap lyrics
     render conn, "index.html"
   end
 

@@ -3,10 +3,10 @@
 
 \begin{document}
 
-\poemtitle{<%= title %>}
-<%= for verse <- lyrics do %>
+\poemtitle{<%= @title %>}
+<%= for verse <- @lyrics do %>
   \begin{verse}
-    <%= for line in verse do %>
+    <%= for line <- verse do %>
       <%= line %>\\
     <% end %>
   \end{verse}
