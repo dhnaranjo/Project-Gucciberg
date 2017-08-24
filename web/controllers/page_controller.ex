@@ -31,9 +31,13 @@ defmodule PhoenixPg.PageController do
                 |> Floki.find(".lyrics p")
                 |> Floki.text
                 |> String.replace(~r/\n\n/, "\n")
+                |> String.replace(~r/\[(.+?)\]/, "-\\1-")
                 |> String.split("\n")
                 |> Enum.chunk_by(&(&1 == ""))
                 |> Enum.reject(&(&1 == [""]))
+
+    # Iona.source(path: "web/static/assets/lemonade.tex")
+    # |> Iona.write!("web/static/assets/lemonade.pdf")
 
     IO.puts song["primary_artist"]["name"]
     IO.puts song["title_with_featured"]

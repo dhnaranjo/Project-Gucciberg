@@ -1,0 +1,15 @@
+\documentclass{book}
+\usepackage{verse}
+
+\begin{document}
+
+\poemtitle{<%= title %>}
+<%= for verse <- lyrics do %>
+  \begin{verse}
+    <%= for line in verse do %>
+      <%= line %>\\
+    <% end %>
+  \end{verse}
+<% end %>
+
+\end{document}

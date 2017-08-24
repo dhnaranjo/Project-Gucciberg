@@ -20,7 +20,7 @@ defmodule PhoenixPg.Mixfile do
   def application do
     [
       mod: {PhoenixPg, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger, :iona]
     ]
   end
 
@@ -44,6 +44,7 @@ defmodule PhoenixPg.Mixfile do
       {:httpoison, "~> 0.13"},
       {:apex, "~> 1.0.0"},
       {:floki, "~> 0.18.0"},
+      {:iona, "~> 0.3"},
     ]
   end
 
