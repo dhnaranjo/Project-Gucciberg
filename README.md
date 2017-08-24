@@ -10,6 +10,9 @@ Upon completion, a user of Project Gucciberg will enter the name of their favori
 
 I'd like to deliver the book in a variety of ways, as an eBook, as a PDF for screen reading, as a PDF ordered and marked for trimming and book binding, and as a PDF formatted for use with digital print services such as [Blurb](http://www.blurb.com). For the first round I'll be satisfied with a downloadable screen reading PDF.
 
+## How's it going so far?
+
+Pretty well.
 ## But why?
 
 I dunno, I think it's fun. I want to learn Elixir, I find the digital vs physical book debate interesting and I really like hip hop. Also I'm unemployed.

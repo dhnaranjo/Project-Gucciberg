@@ -24,31 +24,38 @@ defmodule PhoenixPg.PageController do
 
 
     {_, song} = Enum.fetch(artist_songs,0)
-                # |> Apex.ap
+    # |> Apex.ap
 
     lyrics = HTTPoison.get!(song["url"])
-                |> Map.get(:body)
-                |> Floki.find(".lyrics p")
-                |> Floki.text
-                |> String.replace(~r/\n\n/, "\n")
-                |> String.replace(~r/\[(.+?)\]/, "-\\1-")
-                |> String.split("\n")
-                |> Enum.chunk_by(&(&1 == ""))
-                |> Enum.reject(&(&1 == [""]))
+             |> Map.get(:body)
+             |> Floki.find(".lyrics p")
+             |> Floki.text
+             |> String.replace(~r/\n\n/, "\n")
+             |> String.replace(~r/\[(.+?)\]/, "-\\1-")
+             |> String.split("\n")
+             |> Enum.chunk_by(&(&1 == ""))
+             |> Enum.reject(&(&1 == [""]))
 
-    # Iona.source(path: "web/static/assets/lemonade.tex")
-    # |> Iona.write!("web/static/assets/lemonade.pdf")
-    #
-    #
+             # Iona.source(path: "web/static/assets/lemonade.tex")
+             # |> Iona.write!("web/static/assets/lemonade.pdf")
+             #
+             #
 
-    %{title: song["primary_artist"]["name"], lyrics: lyrics}
-    |> Iona.template(path: "web/static/assets/song.tex.eex")
-    |> Iona.write!("web/static/assets/#{:os.system_time(:seconds)}.pdf")
+    { _, pdf } = %{title: song["primary_artist"]["name"], lyrics: lyrics}
+                 |> Iona.template(path: "web/static/assets/song.tex.eex")
+                 # |> Iona.write!("web/static/assets/#{:os.system_time(:seconds)}.pdf")
+                 |> Iona.to(:pdf)
+    Apex.ap pdf
+
+    conn
+    |> put_resp_content_type("application/pdf")
+    |> put_resp_header("content-disposition", "attachment; filename=\"#{song["title_with_featured"]}.pdf\"")
+    |> send_resp(200, pdf)
 
     # IO.puts song["primary_artist"]["name"]
     # IO.puts song["title_with_featured"]
-    Apex.ap lyrics
-    render conn, "index.html"
+    # Apex.ap lyrics
+    # render conn, "index.html"
   end
 
   def get_song_primary_artist(song), do: song |> Kernel.get_in(["result", "primary_artist"])
