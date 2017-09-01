@@ -24,7 +24,6 @@ defmodule PhoenixPg.PageController do
 
 
     {_, song} = Enum.fetch(artist_songs,0)
-    # |> Apex.ap
 
     lyrics = HTTPoison.get!(song["url"])
              |> Map.get(:body)
@@ -36,23 +35,17 @@ defmodule PhoenixPg.PageController do
              |> Enum.chunk_by(&(&1 == ""))
              |> Enum.reject(&(&1 == [""]))
 
-             # Iona.source(path: "web/static/assets/lemonade.tex")
-             # |> Iona.write!("web/static/assets/lemonade.pdf")
-             #
-             #
+    song_name = song["title_with_featured"]
 
-    { _, pdf } = %{title: song["primary_artist"]["name"], lyrics: lyrics}
+    { _, pdf } = %{title: song_name, lyrics: lyrics}
                  |> Iona.template(path: "web/static/assets/song.tex.eex")
                  # |> Iona.write!("web/static/assets/#{:os.system_time(:seconds)}.pdf")
                  |> Iona.to(:pdf)
-    Apex.ap pdf
-
     conn
     |> put_resp_content_type("application/pdf")
     |> put_resp_header("content-disposition", "attachment; filename=\"#{song["title_with_featured"]}.pdf\"")
     |> send_resp(200, pdf)
 
-    # IO.puts song["primary_artist"]["name"]
     # IO.puts song["title_with_featured"]
     # Apex.ap lyrics
     # render conn, "index.html"

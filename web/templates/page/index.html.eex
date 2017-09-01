@@ -1,9 +1,10 @@
 <div class="jumbotron">
-  <h2><%= gettext "Welcome to %{name}", name: "Project Gucciberg!" %></h2>
+  <h2>Oh hey.</h2>
+  <p>You're a little early for the fully featured version, but feel free to check it out. If you enter the name of an artist I'll spit out a PDF of the lyrics to their current most popular song on Genius. As the project matures you'll get multiple songs together, delivered in the style of a book of poetry. It'll make more sense later. Maybe check out the <a href="https://www.github.com/dhnaranjo/project-gucciberg">GitHub repo.</a></p>
 
   <%= form_for @conn, page_path(@conn, :create), [as: :create, class: "form-inline"], fn f -> %>
     <%= label f, :artist, class: "control-label" %>
-    <%= text_input f, :artist, class: "form-control" %>
+    <%= text_input f, :artist, class: "form-control", value: "Gucci Mane" %>
     <%= submit "Burr", class: "btn btn-primary"%>
   <% end %>
 </div>
